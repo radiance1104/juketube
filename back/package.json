@@ -1,0 +1,19 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "JukeTube backend",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node build/main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.4.2"
+  },
+  "dependencies": {
+    "@microlink/youtube-dl": "^1.13.2",
+    "@types/node": "^11.13.0"
+  }
+}
