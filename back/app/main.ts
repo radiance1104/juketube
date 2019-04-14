@@ -1,12 +1,12 @@
-import {Youtube} from './youtube/youtube';
+import { Rest } from './rest/rest';
 
 class Main {
   constructor() {
   }
 
   start() {
-    const url = 'https://www.youtube.com/watch?v=-3UBfHCF_3s';
-    Youtube.download(url);
+    const rest = new Rest();
+    rest.start();
   }
 }
 
