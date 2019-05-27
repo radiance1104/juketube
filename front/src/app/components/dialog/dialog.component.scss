@@ -1,0 +1,48 @@
+div#dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  > div {
+    width: 400px;
+    height: 160px;
+    background: url("../../../assets/images/metal.jpg");
+    background-size: cover;
+    border-radius: 10px;
+    border: 2px solid #c0c0c0;
+    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.4) inset;
+    position: relative;
+    padding: 20px;
+    p {
+      width: 100%;
+      color: #444;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+    }
+    ul {
+      position: absolute;
+      float: right;
+      right: 10px;
+      bottom: 20px;
+      li {
+        display: inline;
+        color: #444;
+        margin-right: 10px;
+        &:hover {
+          cursor: pointer;
+          color: #666;
+        }
+        &:active {
+          color: #444;
+        }
+      }
+    }
+  }  
+}

@@ -1,14 +1,16 @@
 import * as youtubedl from '@microlink/youtube-dl';
 import moment = require('moment');
+import fs = require('fs');
 import { environment } from '../environment';
-import { Music } from './music';
+import { YoutubeInfo } from './youtube-info';
 
 export class Youtube {
   constructor() {
   }
 
-  static download(url: string, title?: string, artist?: string): Promise<Music> {
-    return new Promise<Music>((resolve, reject) => {
+  // ダウンロード
+  static download(url: string, title?: string, artist?: string): Promise<YoutubeInfo> {
+    return new Promise<YoutubeInfo>((resolve, reject) => {
       youtubedl.getInfo(url, (error, info) => {
         if (error) {
           console.error(error);
@@ -21,7 +23,7 @@ export class Youtube {
               console.error(error);
               reject(error);
             } else {
-              const music = new Music(
+              const music = new YoutubeInfo(
                 url,
                 info.id,
                 title ? title : info.title,
@@ -36,7 +38,13 @@ export class Youtube {
     });
   }
 
+  // ファイル名生成
   static fileName(): string {
     return environment.youtube.mp3Path + moment(new Date()).format('YYYYMMDDHHmmss') + '.mp3';
+  }
+
+  // ファイル削除
+  static remove(fileName: string) {
+    fs.unlinkSync(fileName);
   }
 }

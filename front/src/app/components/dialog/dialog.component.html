@@ -1,0 +1,10 @@
+<div id="dialog" *ngIf="dialogService.shown">
+  <div>
+    <p>{{dialogService.title}}</p>
+    <p>{{dialogService.message}}</p>
+    <ul>
+      <li *ngIf="dialogService.cancelClosure" (click)="onClickCancel()">Cancel</li>
+      <li *ngIf="dialogService.okClosure" (click)="onClickOk()">OK</li>
+    </ul>
+  </div>
+</div>

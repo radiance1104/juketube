@@ -1,11 +1,18 @@
 import { Rest } from './rest/rest';
+import { Jukebox } from './jukebox/jukebox';
 
 class Main {
   constructor() {
   }
 
-  start() {
-    const rest = new Rest();
+  async start() {
+    // start jukebox
+    const jukebox = new Jukebox();
+    await jukebox.refresh();
+    jukebox.startCron();
+
+    // start rest api server
+    const rest = new Rest(jukebox);
     rest.start();
   }
 }

@@ -6,7 +6,9 @@ export const environment = {
     port: 4300
   },
   mongo: {
-    url: 'mongodb://localhost:27017/myproject',
-    database: 'myproject'
+    url: 'mongodb://localhost:27017'
+  },
+  player: {
+    command: 'mpg123 <FILE>'
   }
 }
