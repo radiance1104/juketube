@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   template: `
   <app-loading></app-loading>
   <app-dialog></app-dialog>
+  <app-schedule-dialog></app-schedule-dialog>
   <router-outlet></router-outlet>
   `,
   styles: []

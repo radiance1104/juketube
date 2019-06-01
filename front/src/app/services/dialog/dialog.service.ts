@@ -8,7 +8,7 @@ export class DialogService {
   message: string;
   okClosure: any;
   cancelClosure: any;
-  shown = false;
+  isShowing = false;
 
   constructor() { }
 
@@ -17,6 +17,6 @@ export class DialogService {
     this.message = message;
     this.okClosure = okClosure;
     this.cancelClosure = cancelClosure;
-    this.shown = true;
+    this.isShowing = true;
   }
 }

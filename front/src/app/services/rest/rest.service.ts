@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Music } from './datas/music';
 import { environment } from 'src/environments/environment';
+import { Schedule } from './datas/schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,54 @@ export class RestService {
       const url = environment.back.url + '/playlist';
       this.http.get(url).toPromise().then((musics: Array<Music>) => {
         resolve(musics);
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  getSchedule(): Promise<Schedule> {
+    return new Promise((resolve, reject) => {
+      const url = environment.back.url + '/schedule';
+      this.http.get(url).toPromise().then((schedule: Schedule) => {
+        resolve(schedule);
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  putSchedule(schedule: Schedule): Promise<Schedule> {
+    return new Promise((resolve, reject) => {
+      const url = environment.back.url + '/schedule';
+      const body = schedule;
+      this.http.put(url, body).toPromise().then(() => {
+        resolve();
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  getPause(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const url = environment.back.url + '/pause';
+      this.http.get(url).toPromise().then((response: any) => {
+        resolve(response.pause);
+      }).catch(error => {
+        reject(error);
+      });
+    });
+  }
+
+  putPause(pause: boolean): Promise<null> {
+    return new Promise((resolve, reject) => {
+      const url = environment.back.url + '/pause';
+      const body = {
+        pause: pause
+      };
+      this.http.put(url, body).toPromise().then(() => {
+        resolve();
       }).catch(error => {
         reject(error);
       });

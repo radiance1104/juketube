@@ -1,109 +1,86 @@
 import child_process = require('child_process');
 import cron = require('node-cron');
+import crypto = require('crypto');
 import { Mongo } from '../mongo/mongo';
 import { Music } from "../mongo/music";
 import { environment } from '../environment';
+import { Playlist } from './playlist';
 
 export class Jukebox {
   mongo: Mongo;
-  playlist: Array<Music> = [];
-  isPlaying = false;
-  isPause = false;
+  playlist: Playlist;
+  childProcess: any;
 
   constructor() {
     this.mongo = new Mongo();
+    this.playlist = new Playlist();
+    process.send({code: 'playlist', playlist: this.playlist});
   }
 
   async refresh() {
     const newMusics: Array<Music> = [];
-    await this.mongo.start();
     const musics = await this.mongo.musics();
-    await this.mongo.stop();
     while (musics.length > 0) {
-      const index = Math.floor(Math.random() * musics.length);
+      const index = Math.floor(Jukebox.secureRandom() * musics.length);
       const music = musics.splice(index, 1);
       newMusics.push(music[0]);
     }
-    this.playlist = newMusics;
+    await this.playlist.swap(newMusics);
   }
 
-  musicToPlayNext(): Music {
-    let music = undefined;
-    if (this.playlist && this.playlist.length > 0) {
-      music = this.playlist.splice(0, 1)[0];
-      this.playlist.push(music);
-    }
-    return music;
-  }
-
-  appendMusicToPlaylist(music: Music) {
-    this.playlist.push(music);
-  }
-
-  removeMusicFromPlaylist(musicId: string) {
-    let isRemoved = false;
-    if (this.playlist.length > 0) {
-      this.playlist.forEach((music, index) => {
-        if (music._id.toString() === musicId) {
-          if (index > 0 || !this.isPlaying || this.isPause) {
-            isRemoved = true;
-            this.playlist.splice(index, 1);
-          }
-        }
-      });
-    }
-    return isRemoved;
-  }
-
-  updateMusicInPlaylist(music: Music) {
-    const found = this.playlist.find(finding => {
-      return finding._id.toString() === music._id.toString();
-    })
-    if (found) {
-      found.title = music.title;
-      found.artist = music.artist;
-    }
-  }
-
-  startCron() {
-    cron.schedule('0 */10 * * * *', () => {
-      if (!this.isPause) {
+  async startCron() {
+    cron.schedule('0 */10 * * * *', async () => {
+      if (!this.playlist.isPlaying) {
+        await this.refresh();
         this.start();
       }
     });
+    await this.refresh();
     this.start();
   }
 
   async start() {
-    if (this.isPlaying) {
+    if (this.playlist.isPlaying) {
       return;
     }
-    this.isPlaying = true;
-    while (this.isPlaying && !this.isPause) {
+    this.playlist.play();
+    while (this.playlist.isPlaying) {
+      if (!this.playlist.isPausing) {
+        // check in schedule.
+        const isInSchedule = await this.isInSchedule();
+        if (!isInSchedule) {
+          console.log('out of time');
+          this.playlist.stop();
+          break;
+        }
 
-      const isPlayable = await this.isPlayable();
-      if (!isPlayable) {
-        this.isPlaying = false;
-        break;
+        // head music.
+        const music = await this.playlist.head();
+        if (!music) {
+          console.error('cannot read next music');
+          this.playlist.pause();
+          break;
+        }
+
+        // create command-line for play.
+        const command = environment.player.command.replace(/\<FILE\>/, music.fileName);
+        await this.play(command).catch(() => {});
+
+        // next music.
+        this.playlist.next();
+      } else {
+        await new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve();
+          }, 5000);
+        });
       }
-
-      const music = this.musicToPlayNext();
-      if (!music) {
-        this.isPlaying = false;
-        break;
-      }
-
-      const command = environment.player.command.replace(/\<FILE\>/, music.fileName);
-      await this.play(command).catch(error => {
-        console.error(error);
-        this.isPlaying = false;
-      });
     }
   }
 
   play(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      child_process.exec(command, (error, stdout, stderr) => {
+      this.childProcess = child_process.exec(command, (error, stdout, stderr) => {
         if (error || stderr) {
           reject(stderr);
         } else {
@@ -114,19 +91,21 @@ export class Jukebox {
   }
 
   pause() {
-    this.isPause = true;
+    if (this.childProcess) {
+      this.childProcess.kill();
+      this.childProcess = undefined;
+    }
+    this.playlist.pause();
   }
 
   resume() {
-    this.isPause = false;
+    this.playlist.resume();
     this.start();
   }
 
-  async isPlayable() {
+  async isInSchedule() {
     let isPlayable = false;
-    await this.mongo.start();
     const schedule = await this.mongo.schedule();
-    await this.mongo.stop();
     const now = new Date();
     // week
     if ((now.getDay() == 0 && schedule.weeks.sunday)
@@ -144,5 +123,37 @@ export class Jukebox {
       }
     }
     return isPlayable;
+  }
+
+  private static secureRandom() {
+    // nBytesバイトのランダムなバッファを生成する
+    const randomBytes = crypto.randomBytes(4);
+    // ランダムなバッファを整数値に変換する
+    const r = randomBytes.readUIntBE(0, 4);
+    // 最大値で割ることで、[0.0, 1.0]にする
+    return r / 4294967295;
+  }
+
+  // プロセス間メッセージ受信
+  async onReceive(message: any) {
+    switch (message.code) {
+      case 'append':
+        const created = await this.mongo.music(message.musicId);
+        this.playlist.append(created);
+        break;
+      case 'update':
+        const updated = await this.mongo.music(message.musicId);
+        this.playlist.update(updated);
+        break;
+      case 'delete':
+        this.playlist.remove(message.musicId);
+        break;
+      case 'pause':
+        this.pause();
+        break;
+      case 'resume':
+        this.resume();
+        break;
+    }
   }
 }

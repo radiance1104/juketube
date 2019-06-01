@@ -4,15 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class LoadingService {
-  shown = false;
+  isShowing = false;
 
   constructor() { }
 
   show() {
-    this.shown = true;
+    this.isShowing = true;
   }
 
   hide() {
-    this.shown = false;
+    this.isShowing = false;
   }
 }

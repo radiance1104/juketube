@@ -30,9 +30,10 @@ export class Mongo {
   }
 
   music(id: string): Promise<Music> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('musics');
-      collection.find({_id: new ObjectID(id)}).toArray((error, documents) => {
+      collection.find({_id: new ObjectID(id)}).toArray(async (error, documents) => {
         if (error) {
           console.error(error);
           reject(error);
@@ -43,62 +44,75 @@ export class Mongo {
             resolve(null);
           }
         }
+        await this.stop();
       });
     });
   }
 
   musics(): Promise<Array<Music>> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('musics');
-      collection.find({}).toArray((error, documents) => {
+      collection.find({}).toArray(async (error, documents) => {
         if (error) {
           console.error(error);
           reject(error);
         } else {
           resolve(documents);
         }
+        await this.stop();
       });
     });
   }
 
   insertMusic(music: Music): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('musics');
-      collection.insertOne(music).then(inserted => {
+      collection.insertOne(music).then(async inserted => {
         resolve(inserted);
-      }).catch(error => {
+        await this.stop();
+      }).catch(async error => {
         console.error(error);
         reject(error);
+        await this.stop();
       });
     });
   }
 
   updateMusic(id: string, newMusic: any): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('musics');
-      collection.updateOne({_id: new ObjectID(id)}, {$set: newMusic}).then(updated => {
+      collection.updateOne({_id: new ObjectID(id)}, {$set: newMusic}).then(async updated => {
         resolve(updated);
-      }).catch(error => {
+        await this.stop();
+      }).catch(async error => {
         console.error(error);
         reject(error);
+        await this.stop();
       });
     });
   }
 
   deleteMusic(id: string) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('musics');
-      collection.deleteOne({_id: new ObjectID(id)}).then(deleted => {
+      collection.deleteOne({_id: new ObjectID(id)}).then(async deleted => {
         resolve(deleted);
-      }).catch(error => {
+        await this.stop();
+      }).catch(async error => {
         console.error(error);
         reject(error);
+        await this.stop();
       });
     });
   }
 
   schedule(): Promise<Schedule> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('schedule');
       collection.find({}).toArray(async (error, documents) => {
         if (error) {
@@ -114,31 +128,38 @@ export class Mongo {
             resolve(schedule);
           }
         }
+        await this.stop();
       });
     });
   }
 
   insertSchedule(schedule: Schedule): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.start();
       const collection = this.db.collection('schedule');
-      collection.insertOne(schedule).then(inserted => {
+      collection.insertOne(schedule).then(async inserted => {
         resolve(inserted);
-      }).catch(error => {
+        await this.stop();
+      }).catch(async error => {
         console.error(error);
         reject(error);
+        await this.stop();
       });
     });
   }
 
-  updateSchedule(newSchedule: Schedule): Promise<any> {
+  updateSchedule(newSchedule: any): Promise<any> {
     return new Promise(async (resolve, reject) => {
       const schedule = await this.schedule();
+      await this.start();
       const collection = this.db.collection('schedule');
-      collection.updateOne({_id: new ObjectID(schedule._id)}, {$set: newSchedule}).then(updated => {
+      collection.updateOne({_id: new ObjectID(schedule._id)}, {$set: newSchedule}).then(async updated => {
         resolve(updated);
-      }).catch(error => {
+        await this.stop();
+      }).catch(async error => {
         console.error(error);
         reject(error);
+        await this.stop();
       });
     });
   }

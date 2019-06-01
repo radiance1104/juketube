@@ -3,6 +3,7 @@ import { RestService } from 'src/app/services/rest/rest.service';
 import { Music } from 'src/app/services/rest/datas/music';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { ScheduleDialogService } from 'src/app/services/schedule-dialog/schedule-dialog.service';
 
 @Component({
   selector: 'app-main',
@@ -14,27 +15,47 @@ export class MainComponent implements OnInit {
   url: string;
   title: string;
   artist: string;
-  isDisplayAdd = false;
   isAscend = true;
   isSortedByTitle = false;
   isSortedByArtist = false;
   isSortedByPlaylist = false;
   editingMusicId: string;
+  isPause = false;
+  isDisplayAdd = false;
 
   constructor(
     private restService: RestService,
     private loadingService: LoadingService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private scheduleDialogService: ScheduleDialogService
   ) { }
 
   ngOnInit() {
     this.refresh();
+    setInterval(() => {
+      this.restService.getPause().then(pause => {
+        this.isPause = pause;
+      }).catch();  
+    }, 5000);
   }
 
   refresh() {
     this.loadingService.show();
     this.restService.getMusics().then(musics => {
       this.musics = musics;
+      this.loadingService.hide();
+    }).catch(error => {
+      this.loadingService.hide();
+    });
+    this.restService.getPause().then(pause => {
+      this.isPause = pause;
+    }).catch();  
+  }
+
+  onClickPlay() {
+    this.isPause = !this.isPause;
+    this.loadingService.show();
+    this.restService.putPause(this.isPause).then(response => {
       this.loadingService.hide();
     }).catch(error => {
       this.loadingService.hide();
@@ -59,7 +80,7 @@ export class MainComponent implements OnInit {
         // Select cancel
       });
     } else {
-      // TODO:
+      this.dialogService.show('Required', 'Input url', () => {});
     }
   }
 
@@ -72,7 +93,7 @@ export class MainComponent implements OnInit {
         this.loadingService.hide();
       }).catch(error => {
         if (error.status === 409) {
-          // TODO:
+          this.dialogService.show('Error', 'The song being played can not be deleted', () => {});
         }
         this.loadingService.hide();
       });
@@ -99,6 +120,8 @@ export class MainComponent implements OnInit {
   onClickSortTitle() {
     if (!this.isSortedByTitle) {
       this.isSortedByTitle = true;
+      this.isSortedByArtist = false;
+      this.isSortedByPlaylist = false;
       this.isAscend = true;
     } else {
       this.isAscend = !this.isAscend;
@@ -116,7 +139,9 @@ export class MainComponent implements OnInit {
 
   onClickSortArtist() {
     if (!this.isSortedByArtist) {
+      this.isSortedByTitle = false;
       this.isSortedByArtist = true;
+      this.isSortedByPlaylist = false;
       this.isAscend = true;
     } else {
       this.isAscend = !this.isAscend;
@@ -124,7 +149,7 @@ export class MainComponent implements OnInit {
     this.musics = this.musics.sort((a: Music, b: Music) => {
       if (a.artist > b.artist) {
         return this.isAscend ? 1 : -1;
-      } else if (a.title < b.title) {
+      } else if (a.artist < b.artist) {
         return this.isAscend ? -1 : 1;
       } else {
         return 0;
@@ -135,11 +160,17 @@ export class MainComponent implements OnInit {
   onClickSortPlaylist() {
     this.loadingService.show();
     this.restService.getPlaylist().then(playlist => {
+      this.isSortedByTitle = false;
+      this.isSortedByArtist = false;
       this.isSortedByPlaylist = true;
       this.musics = playlist;
       this.loadingService.hide();
     }).catch(error => {
       this.loadingService.hide();
     });
+  }
+
+  onClickSchedule() {
+    this.scheduleDialogService.show();
   }
 }

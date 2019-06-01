@@ -15,13 +15,13 @@ export class DialogComponent implements OnInit {
 
   onClickOk() {
     this.dialogService.okClosure();
-    this.dialogService.shown = false;
+    this.dialogService.isShowing = false;
   }
 
   onClickCancel() {
     if (this.dialogService.cancelClosure) {
       this.dialogService.cancelClosure();
     }
-    this.dialogService.shown = false;
+    this.dialogService.isShowing = false;
   }
 }

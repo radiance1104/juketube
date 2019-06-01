@@ -9,6 +9,7 @@ import { MainComponent } from './components/main/main.component';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { LoadingComponent } from './components/loading/loading.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { ScheduleDialogComponent } from './components/schedule-dialog/schedule-dialog.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
     AppComponent,
     MainComponent,
     LoadingComponent,
-    DialogComponent
+    DialogComponent,
+    ScheduleDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -1,20 +1,23 @@
 <div id="main">
   <header>
     <ul id="menu">
-      <li (click)="isDisplayAdd = !isDisplayAdd" tabindex="7">add</li>
       <li tabindex="8" (click)="onClickSortTitle()">title</li>
       <li tabindex="9" (click)="onClickSortArtist()">artist</li>
-      <li tabindex="10" (click)="onClickSortPlaylist()">playlist</li>
-      <li tabindex="11">schedule</li>
+      <li tabindex="10" (click)="onClickSortPlaylist()">order</li>
+      <li tabindex="11" (click)="onClickSchedule()">schedule</li>
     </ul>
   </header>
-  <div id="add" *ngIf="isDisplayAdd">
-    <input [(ngModel)]="url" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx" tabindex="1"/><br>
-    <input [(ngModel)]="title" placeholder="Optional - Title" tabindex="2"/><br>
-    <input [(ngModel)]="artist" placeholder="Optional - Artist name" tabindex="3"/><br>
-    <div id="add-button" (click)="onClickAdd()" tabindex="4">Add new music</div>
+  <div id="add">
+    <div *ngIf="isDisplayAdd">
+      <input [(ngModel)]="url" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx" tabindex="1"/><br>
+      <input [(ngModel)]="title" placeholder="Optional - Title" tabindex="2"/><br>
+      <input [(ngModel)]="artist" placeholder="Optional - Artist name" tabindex="3"/><br>
+      <div id="add-button" (click)="onClickAdd()" tabindex="4">Add new music</div>
+    </div>
   </div>
-
+  <div id="add-button" (click)="isDisplayAdd = !isDisplayAdd">
+    {{isDisplayAdd ? '▲close' : '▼add'}}
+  </div>
   <div class="music" *ngFor="let music of musics">
     <img class="delete" (click)="onClickDelete(music)" src="./assets/images/delete.png">
     <img class="edit" (click)="onClickEdit(music)" src="./assets/images/edit.png">
@@ -27,5 +30,8 @@
       <input [(ngModel)]="music.artist" placeholder="Optional - Artist name" tabindex="6"/><br>
     </ng-container>
     <p class="duration">{{music.duration | time}}</p>
+  </div>
+  <div id="status" (click)="onClickPlay()">
+    <img [class.round]="!isPause" src="./assets/images/loading.png">
   </div>
 </div>

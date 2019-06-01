@@ -1,7 +1,7 @@
 div#main {
   width: 100%;
   height: 100%;
-  padding: 50px 50px 0 50px;
+  padding: 20px 50px 50px 50px;
   background: url("../../../assets/images/wooden.jpg");
   box-sizing: border-box;
   overflow-y: auto;
@@ -35,32 +35,52 @@ div#main {
   div#add {
     background: url("../../../assets/images/metal.jpg");
     background-size: cover;
-    margin-bottom: 40px;
-    padding: 20px;
     border-radius: 10px;
     border: 2px solid #e6b422;
     box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.4) inset;
-    input {
-      width: 100%;
-      height: 20px;
-      line-height: 20px;
-      margin-bottom: 6px;
-      background-color: #00000000;
+    > div {
+      padding: 20px;
+      input {
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        margin-bottom: 6px;
+        background-color: #00000000;
+      }
+      div#add-button {
+        color: #444;
+        font-size: 14px;
+        background-color: #c0c0c0;
+        border-radius: 2px;
+        display: inline;
+        padding: 4px;
+        &:hover {
+          cursor: pointer;
+          background-color: #e0e0e0;
+        }
+        &:active {
+          background-color: #a0a0a0;
+        }
+      }
     }
-    div#add-button {
-      color: #444;
-      font-size: 14px;
-      background-color: #c0c0c0;
-      border-radius: 2px;
-      display: inline;
-      padding: 4px;
-      &:hover {
-        cursor: pointer;
-        background-color: #e0e0e0;
-      }
-      &:active {
-        background-color: #a0a0a0;
-      }
+  }
+
+  div#add-button {
+    color: #444;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    width: 60px;
+    height: 16px;
+    text-align: center;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    background-color: #e6b422;
+    &:hover {
+      cursor: pointer;
+      background-color: #e6b422aa;
+    }
+    &:active {
+      background-color: #e6b42255;
     }
   }
 
@@ -121,6 +141,29 @@ div#main {
       line-height: 20px;
       margin-bottom: 6px;
       background-color: #00000000;
+    }
+  }
+
+  div#status {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: -30px;
+    right: 16px;
+    z-index: 100;
+    &:hover {
+      cursor: pointer;
+    }
+    img {
+      width: 100px;
+      height: 100px;
+      &.round {
+        animation: spin 1.5s linear infinite;
+      }
+    }
+    @keyframes spin {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
     }
   }
 }

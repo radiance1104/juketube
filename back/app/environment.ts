@@ -8,7 +8,11 @@ export const environment = {
   mongo: {
     url: 'mongodb://localhost:27017'
   },
+  normalization: {
+    enable: true,
+    command: 'ffmpeg -i <IN> -af dynaudnorm <OUT>'
+  },
   player: {
-    command: 'mpg123 <FILE>'
+    command: 'mpg123 -vC <FILE>'
   }
 }
