@@ -9,7 +9,7 @@
     ```
 
 1. Install ffmpeg
-  for mac.
+  for macOS.
     ```
     $ brew install ffmpeg
     ```
@@ -32,7 +32,4 @@
     $ npm start
     ```
 
-mac MongoDB開始
-$ brew services list
-$ brew services start mongodb
 

@@ -107,7 +107,6 @@ export class Jukebox {
     let isPlayable = false;
     const schedule = await this.mongo.schedule();
     const now = new Date();
-    // week
     if ((now.getDay() == 0 && schedule.weeks.sunday)
         || (now.getDay() == 1 && schedule.weeks.monday)
         || (now.getDay() == 2 && schedule.weeks.tuesday)
@@ -126,15 +125,11 @@ export class Jukebox {
   }
 
   private static secureRandom() {
-    // nBytesバイトのランダムなバッファを生成する
     const randomBytes = crypto.randomBytes(4);
-    // ランダムなバッファを整数値に変換する
     const r = randomBytes.readUIntBE(0, 4);
-    // 最大値で割ることで、[0.0, 1.0]にする
     return r / 4294967295;
   }
 
-  // プロセス間メッセージ受信
   async onReceive(message: any) {
     switch (message.code) {
       case 'append':

@@ -109,11 +109,9 @@ export class Rest {
             });
           }
           if (isRemovable) {
-            // DBから削除する
             const found = await this.mongo.music(request.params.id);
             if (found) {
               const deleted = await this.mongo.deleteMusic(request.params.id);
-              // ファイルを削除する
               Youtube.remove(found.fileName);
               process.send({code: 'delete', musicId: request.params.id});
               response.send();
@@ -219,7 +217,6 @@ export class Rest {
     this.server.close();
   }
 
-  // プロセス間メッセージ受信
   onReceive(message: any) {
     switch (message.code) {
       case 'playlist':

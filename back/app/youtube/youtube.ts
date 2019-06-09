@@ -9,7 +9,6 @@ export class Youtube {
   constructor() {
   }
 
-  // ダウンロード
   static download(url: string, title?: string, artist?: string): Promise<YoutubeInfo> {
     return new Promise<YoutubeInfo>((resolve, reject) => {
       youtubedl.getInfo(url, (error, info) => {
