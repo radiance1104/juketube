@@ -75,6 +75,8 @@ export class MainComponent implements OnInit {
           this.loadingService.hide();
         }).catch(error => {
           this.loadingService.hide();
+          console.log(error);
+          this.dialogService.show('Server Error', `A server error has occurred. (${error.status})`, ()=> {});
         });
       }, () => {
         // Select cancel
