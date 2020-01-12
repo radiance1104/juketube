@@ -28,7 +28,7 @@ export class Youtube {
               if (environment.normalization.enable) {
                 const rename = Youtube.fileName();
                 await Youtube.normalize(tmpName, fileName);
-                await Youtube.erazeTmpFile(tmpName);
+                await Youtube.removeTmpFile(tmpName);
               }
 
               const music = new YoutubeInfo(
@@ -72,7 +72,7 @@ export class Youtube {
     });
   }
 
-  static erazeTmpFile(fileName: string) {
+  static removeTmpFile(fileName: string) {
     return new Promise((resolve, reject) => {
       const command = 'rm ' + fileName;
       child_process.exec(command, (error, stdout, stderr) => {
