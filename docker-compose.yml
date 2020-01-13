@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: juketube-app
+    depends_on:
+      - mongo
+    ports:
+      - 4200:4200
+      - 4300:4300
+    volumes:
+      - ./volumes/musics:/root/back/musics
+  mongo:
+    image: mongo
+    container_name: juketube-mongo
+    restart: always
+    volumes:
+      - ./volumes/mongo:/data/db
