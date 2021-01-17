@@ -6,4 +6,5 @@ export class Music {
   artist: string;
   duration: number;
   fileName: string;
+  enable: boolean;
 }

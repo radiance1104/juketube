@@ -22,12 +22,12 @@
     <img class="delete" (click)="onClickDelete(music)" src="./assets/images/delete.png">
     <img class="edit" (click)="onClickEdit(music)" src="./assets/images/edit.png">
     <ng-container *ngIf="music._id !== editingMusicId">
-      <p class="title">{{music.title}}</p>
-      <p class="artist">{{music.artist}}</p>    
+      <p class="title"><input type="checkbox" [(ngModel)]="music.enable" (change)="onChangeEnable(music)">{{music.title}}</p>
+      <p class="artist">{{music.artist}}</p>
     </ng-container>
     <ng-container *ngIf="music._id === editingMusicId">
-      <input [(ngModel)]="music.title" placeholder="Optional - Title" tabindex="5"/><br>
-      <input [(ngModel)]="music.artist" placeholder="Optional - Artist name" tabindex="6"/><br>
+      <input type="text" [(ngModel)]="music.title" placeholder="Optional - Title" tabindex="5"/><br>
+      <input type="text" [(ngModel)]="music.artist" placeholder="Optional - Artist name" tabindex="6"/><br>
     </ng-container>
     <p class="duration">{{music.duration | time}}</p>
   </div>

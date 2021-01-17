@@ -28,7 +28,7 @@ export class Rest {
     app.use((request, response, next) => {
       response.header('Access-Control-Allow-Origin', '*');
       response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-      response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+      response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
       next();
     });
 
@@ -52,7 +52,8 @@ export class Rest {
               request.body.title ? request.body.title : info.title,
               request.body.artist ? request.body.artist : info.artist,
               info.duration,
-              info.fileName);
+              info.fileName,
+              true);
             const inserted = await this.mongo.insertMusic(music);
             music._id = inserted.insertedId;
             process.send({code: 'append', musicId: music._id});
@@ -85,6 +86,24 @@ export class Rest {
           const music = await this.mongo.music(request.params.id);
           process.send({code: 'update', musicId: request.params.id});
           response.send(music);
+        } else {
+          // BAD REQUEST
+          response.sendStatus(400);
+        }
+      } catch (error) {
+        // INTERNAL SERVER ERROR
+        response.sendStatus(500);
+      }
+    });
+
+    app.patch('/musics/:id/enable', async (request, response, next) => {
+      try {
+        if (request.params.id) {
+          const music = await this.mongo.music(request.params.id);
+          music.enable = request.body.enable ? true : false;
+          await this.mongo.updateMusic(request.params.id, music);
+          process.send({code: 'update', musicId: request.params.id});
+          response.send();
         } else {
           // BAD REQUEST
           response.sendStatus(400);

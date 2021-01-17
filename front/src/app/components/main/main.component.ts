@@ -119,6 +119,15 @@ export class MainComponent implements OnInit {
     }
   }
 
+  onChangeEnable(music: Music) {
+    this.loadingService.show();
+    this.restService.patchMusics(music, music.enable).then(response => {
+      this.loadingService.hide();
+    }).catch(error => {
+      this.loadingService.hide();
+    });
+  }
+
   onClickSortTitle() {
     if (!this.isSortedByTitle) {
       this.isSortedByTitle = true;

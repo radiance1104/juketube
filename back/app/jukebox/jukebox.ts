@@ -59,7 +59,7 @@ export class Jukebox {
         if (!music) {
           console.error('cannot read next music');
           this.playlist.pause();
-          break;
+          continue;
         }
 
         // create command-line for play.

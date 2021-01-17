@@ -12,8 +12,17 @@ export class Playlist {
 
   next() {
     if (this.musics && this.musics.length > 0) {
-      const music = this.musics.splice(0, 1)[0];
-      this.musics.push(music);
+      let enable = false;
+      const found = this.musics.find(music => {
+        return music.enable;
+      });
+      if (found) {
+        while (!enable) {
+          const music = this.musics.splice(0, 1)[0];
+          this.musics.push(music);
+          enable = this.musics[0].enable;
+        }
+      }
       this.notify();
     }
   }
@@ -21,9 +30,12 @@ export class Playlist {
   head(): Music {
     let music = undefined;
     if (this.musics && this.musics.length > 0) {
+      if (!this.musics[0].enable) {
+        this.next();
+      }
       music = this.musics[0];
     }
-    return music;
+    return music.enable ? music : null;
   }
 
   append(music: Music) {
@@ -37,6 +49,7 @@ export class Playlist {
     });
     found.title = music.title;
     found.artist = music.artist;
+    found.enable = music.enable;
     this.notify();
   }
 

@@ -123,6 +123,10 @@ div#main {
       &.title {
         font-size: 20px;
         line-height: 22px;
+        padding-left: 2px;
+        input[type='checkbox'] {
+          margin-right: 6px;
+        }
       }
       &.artist {
         font-size: 12px;
@@ -135,12 +139,52 @@ div#main {
         margin-top: 4px;
       }
     }
-    input {
+    input[type=text] {
       width: 100%;
       height: 20px;
       line-height: 20px;
       margin-bottom: 6px;
       background-color: #00000000;
+    }
+    input[type='checkbox'] {
+      appearance: none;
+      outline: none;
+//      display: block;
+      position: relative;
+      text-align: center;
+      cursor: pointer;
+      width: 10px;
+      height: 10px;
+//      margin: 0 auto;
+      &::before {
+        display: block;
+        position: absolute;
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: #ffffff00;
+        border: solid 2px #44444440;
+        border-radius: 0;
+      }
+      &:checked::before {
+        background-color: #ffffff00;
+      }
+      &::after {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: -1px;
+        width: 4px;
+        height: 8px;
+        border-right: 3px solid #444;
+        border-bottom: 3px solid #444;
+        transform: rotate(45deg);
+        opacity: 0;
+      }
+      &:checked::after {
+        opacity: 1;
+      }
     }
   }
 

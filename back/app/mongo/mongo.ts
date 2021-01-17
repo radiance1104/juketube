@@ -12,7 +12,7 @@ export class Mongo {
 
   start(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.client = new MongoClient(environment.mongo.url, {useNewUrlParser: true});
+      this.client = new MongoClient(environment.mongo.url, {useNewUrlParser: true, useUnifiedTopology: true});
       this.client.connect(error => {
         if (error) {
           console.error(error);
