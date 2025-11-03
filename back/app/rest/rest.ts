@@ -53,10 +53,11 @@ export class Rest {
               request.body.artist ? request.body.artist : info.artist,
               info.duration,
               info.fileName,
-              true);
+              true
+            );
             const inserted = await this.mongo.insertMusic(music);
             music._id = inserted.insertedId;
-            process.send({code: 'append', musicId: music._id});
+            process.send({ code: 'append', musicId: music._id });
             response.send(music);
           }).catch(error => {
             // INTERNAL SERVER ERROR
@@ -205,7 +206,7 @@ export class Rest {
     app.get('/pause', (request, response, next) => {
       try {
         response.send({
-          pause: this.playlist.isPausing
+          pause: this.playlist?.isPausing ?? true
         });
       } catch (error) {
         // INTERNAL SERVER ERROR

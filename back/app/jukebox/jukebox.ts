@@ -69,7 +69,7 @@ export class Jukebox {
         // next music.
         this.playlist.next();
       } else {
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
           setTimeout(() => {
             resolve();
           }, 5000);

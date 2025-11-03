@@ -1,0 +1,43 @@
+<div id="schedule-dialog" *ngIf="scheduleDialogService.isShowing()">
+  <div>
+    <p>Schedule</p>
+    <div id="weeks">
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.sunday"><span>Sun.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.monday"><span>Mon.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.tuesday"><span>Tue.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.wednesday"><span>Wed.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.thursday"><span>Thu.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.friday"><span>Fri.</span></label>
+      <label><input type="checkbox" [(ngModel)]="scheduleDialogService.schedule().weeks.saturday"><span>Sat.</span></label>
+    </div>
+    <div id="time">
+      <select [(ngModel)]="scheduleDialogService.schedule().start.hour">
+        <option *ngFor="let hour of hours" [ngValue]="hour">
+          {{( '00' + hour).slice(-2) }}
+        </option>
+      </select>
+      <span>:</span>
+      <select [(ngModel)]="scheduleDialogService.schedule().start.minute">
+        <option *ngFor="let minute of minutes" [ngValue]="minute">
+          {{ ('00' + minute).slice(-2) }}
+        </option>
+      </select>
+      <span>-</span>
+      <select [(ngModel)]="scheduleDialogService.schedule().end.hour">
+          <option *ngFor="let hour of hours" [ngValue]="hour">
+            {{ ('00' + hour).slice(-2) }}
+          </option>
+        </select>
+        <span>:</span>
+        <select [(ngModel)]="scheduleDialogService.schedule().end.minute">
+          <option *ngFor="let minute of minutes" [ngValue]="minute">
+            {{ ('00' + minute).slice(-2) }}
+          </option>
+        </select>
+      </div>
+    <ul>
+      <li (click)="onClickCancel()">Cancel</li>
+      <li (click)="onClickOk()">OK</li>
+    </ul>
+  </div>
+</div>

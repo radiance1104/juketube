@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export class Music {
-  _id: string;
+  _id: ObjectId;
   url: string;
   youtubeId: string;
   title: string;

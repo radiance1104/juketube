@@ -1,0 +1,47 @@
+<div id="main">
+  <header>
+    <ul id="menu">
+      <li tabindex="8" (click)="onClickSortTitle()">title</li>
+      <li tabindex="9" (click)="onClickSortArtist()">artist</li>
+      <li tabindex="10" (click)="onClickSortPlaylist()">order</li>
+      <li tabindex="11" (click)="onClickSchedule()">schedule</li>
+    </ul>
+  </header>
+
+  <div id="add">
+    <div *ngIf="isDisplayAdd()">
+      <input [(ngModel)]="urlValue" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx" tabindex="1"/><br>
+      <input [(ngModel)]="titleValue" placeholder="Optional - Title" tabindex="2"/><br>
+      <input [(ngModel)]="artistValue" placeholder="Optional - Artist name" tabindex="3"/><br>
+      <div id="add-button" (click)="onClickAdd()" tabindex="4">Add new music</div>
+    </div>
+  </div>
+
+  <div id="add-button" (click)="isDisplayAdd.set(!isDisplayAdd())">
+    {{ isDisplayAdd() ? '▲close' : '▼add' }}
+  </div>
+
+  <div class="music" *ngFor="let music of musics()">
+    <img class="delete" (click)="onClickDelete(music)" src="./assets/images/delete.png">
+    <img class="edit" (click)="onClickEdit(music)" src="./assets/images/edit.png">
+
+    <ng-container *ngIf="music._id !== editingMusicId()">
+      <p class="title">
+        <input type="checkbox" [(ngModel)]="music.enable" (change)="onChangeEnable(music)">
+        {{ music.title }}
+      </p>
+      <p class="artist">{{ music.artist }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="music._id === editingMusicId()">
+      <input type="text" [(ngModel)]="music.title" placeholder="Optional - Title" tabindex="5"/><br>
+      <input type="text" [(ngModel)]="music.artist" placeholder="Optional - Artist name" tabindex="6"/><br>
+    </ng-container>
+
+    <p class="duration">{{ music.duration | time }}</p>
+  </div>
+
+  <div id="status" (click)="onClickPlay()">
+    <img [class.round]="!isPause()" src="./assets/images/loading.png">
+  </div>
+</div>

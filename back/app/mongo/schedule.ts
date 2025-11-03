@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export class TimeForSchedule {
   hour: number;
   minute: number;
@@ -19,7 +21,7 @@ export class WeeksForSchedule {
 }
 
 export class Schedule {
-  _id: string;
+  _id: ObjectId;
   start = new TimeForSchedule(9, 0);
   end = new TimeForSchedule(18, 0);
   weeks = new WeeksForSchedule();

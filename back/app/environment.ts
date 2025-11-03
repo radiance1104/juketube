@@ -1,6 +1,7 @@
 export const environment = {
   youtube: {
     mp3Path: './musics/',
+    ffmpegLocation: '/opt/homebrew/bin/ffmpeg'
   },
   restServer: {
     port: 4300
@@ -10,7 +11,7 @@ export const environment = {
   },
   normalization: {
     enable: true,
-    command: 'ffmpeg -i <IN> -af dynaudnorm <OUT>'
+    command: 'ffmpeg -hide_banner -loglevel error -i <IN> -af dynaudnorm <OUT>'
   },
   player: {
     command: 'mpg123 -vC <FILE>'

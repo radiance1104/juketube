@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'time'})
+@Pipe({ name: 'time', standalone: true })
 export class TimeFormatPipe implements PipeTransform {
   transform(seconds: number): string {
     const sec = ('00' + seconds % 60).slice(-2);
